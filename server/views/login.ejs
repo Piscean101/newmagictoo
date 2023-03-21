@@ -1,0 +1,15 @@
+<h1>Login page</h1>
+
+<form action="/login/password" method="POST">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" required>
+    <label for="password">Password</label>
+    <input type="text" name="password" id="password" required>
+    
+    <button type="submit">Login</button>
+</form>
+
+<h2 id="login-status"><%= locals.message %></h2>
+
+<a href="/register">Register</a>
+<a href="/">Home</a>

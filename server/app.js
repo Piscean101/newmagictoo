@@ -54,7 +54,10 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 app.get('/login', (req, res) => {
-    res.render('login')
+    if (req.isAuthenticated()) {
+        res.render('index');
+    } else 
+   { res.render('login')}
 });
 app.get('/register', (req, res) => {
     res.render('register')
@@ -62,9 +65,27 @@ app.get('/register', (req, res) => {
 app.get('/index', (req, res) => {
     res.render('index')
 });
+app.get('/cart/:ID', (req, res, next) => {
+    res.render('cart');
+    console.log(req.user);
+//    next();
+});
+app.get('/cart/:ID', (req, res) => {
+    let sql = `SELECT * FROM carts WHERE user_id = ${req.params.ID}`;
+    db.query(sql, (err, data) => {
+        res.send(data);
+    })
+})
+app.get('/checkout', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.render('checkout')
+    } else {
+        res.render('login')
+    }
+})
 app.get('/~/:username', (req, res) => {
     res.render('welcome', { username: req.params.username});
-})
+});
 // Query Routes
 app.get('/spells', (req, res) => {
     let sql = `SELECT * FROM spells;`;
@@ -72,18 +93,24 @@ app.get('/spells', (req, res) => {
         res.send(data);
     })
 });
-app.get('/spells/:id', (req, res) => {
+app.get('/spells/filter/id/:id', (req, res) => {
     let sql = `SELECT * FROM spells WHERE id = ${req.params.id};`;
     db.query(sql, (err, data) => {
         res.send(data);
     })
 });
-app.get('/spells/filter/:element', (req, res) => {
+app.get('/spells/filter/element/:element', (req, res) => {
     let sql = `SELECT * FROM spells WHERE element = '${req.params.element}'`;
     db.query(sql, (err, data) => {
         res.send(data);
     })
 });
+app.get('/spells/filter/maxcost/:cost', (req, res) => {
+    let sql = `SELECT * FROM spells WHERE cost < ${req.params.cost}`;
+    db.query(sql, (err, data) => {
+        res.send(data);
+    })
+})
 // User Routes 
 app.post('/register', (req, res) => {
     let doesExist = `SELECT * FROM customers WHERE username = '${req.body.username}';`;
@@ -113,25 +140,62 @@ app.post('/login/password', passport.authenticate('local', {
     failureRedirect: '/login'
 })
 );
+app.get('/logout', (req, res) => {
+    res.render('login');
+    req.session.destroy();
+    req.logOut( () => {
+        console.log('bye felicia')
+    });
+})
 app.get('/~', (req, res) => {
-    res.send(req.user);
+    res.render('index', { username: req.user })
+})
+// Purchase Routes
+app.get('/addCart/:itemID', (req, res) => {
+    if (req.isAuthenticated()){ 
+    console.log(req.user);
+    let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_Cost) VALUES (${req.user.id}, '${req.user.username}', '${req.body.itemName}', ${req.body.gold}, ${req.body.gems})`;
+    db.query(sql, (err) => {
+        if (err) {
+            return (err)
+        } else {
+            console.log('Item Selected')
+        }
+    })} else {
+        res.render('register');
+    }
+});
+app.get('/dropCart/:itemID', (req, res) => {
     if (req.isAuthenticated()) {
-        console.log('bitch im authentic')
+        let sql = `DELETE FROM carts WHERE item_name = ${req.body.itemName} LIMIT 1`;
+        db.query(sql, () => {
+            console.log('Item Removed');
+        })
+    } else {
+        res.render('register');
+    }
+});
+app.post('/checkout/:ID', (req, res) => {
+    if (req.isAuthenticated()) {
+        let sql = `DELETE FROM carts WHERE item_name = ${req.body}`;
+    } else {
+        
     }
 })
-
-
 
 // ALTER TABLE customers ADD COLUMN spells_learned_${id} TEXT WHERE id = ${userid};
 
 function initialize(passport, username, password) {
     const authenticate = async (username, password, done) => {
-        const P = `SELECT username FROM customers WHERE password = '${password}' AND username = '${username}';`;
-        db.query(P, (err, data) => {
-            if (data.length > 0) {
-                return done(null, username)
+        const P = `SELECT * FROM customers WHERE password = '${password}' AND username = '${username}';`;
+        db.query(P, (err, userData) => {
+            if (userData.length > 0) {
+                const user = userData[0];
+                console.log(user);
+                console.log(`${username} / ${user.nickname} Logged In Successfully`);
+                return done(null, user)
             } else {
-                console.log('fail');
+                console.log(`Failed to Authenticate | ${username} | attempt: ${password}`);
                 return done(null, false)
             
             }
@@ -141,5 +205,5 @@ function initialize(passport, username, password) {
     passport.use(new LocalStrategy(authenticate));
     
     passport.serializeUser( function(user, done) { return done (null, user)});
-    passport.deserializeUser( function(user, done) { return done(null, user)})
+    passport.deserializeUser( function(user, done) { return done(null, user)});
 }

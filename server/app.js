@@ -64,6 +64,7 @@ app.get('/register', (req, res) => {
 });
 app.get('/index', (req, res) => {
     res.render('index')
+    console.log(req.user)
 });
 app.get('/cart/:ID', (req, res, next) => {
     res.render('cart');
@@ -148,6 +149,7 @@ app.get('/logout', (req, res) => {
     });
 })
 app.get('/~', (req, res) => {
+//    console.log(req.user.id);
     res.render('index', { username: req.user })
 })
 // Purchase Routes
@@ -177,13 +179,23 @@ app.get('/dropCart/:itemID', (req, res) => {
 });
 app.post('/checkout/:ID', (req, res) => {
     if (req.isAuthenticated()) {
-        let sql = `DELETE FROM carts WHERE item_name = ${req.body}`;
+        let sql = `SELECT * FROM carts WHERE user_id = ${req.user.id}`;
+        let sql2 = `DELETE FROM carts WHERE user_id = ${req.user.id}`;
+        let learned = [];
+//      let sql7 = `ALTER TABLE customers ADD COLUMN spells_learned_${id} TEXT WHERE id = ${userid};`;
+        db.query(sql, (err, data) => {
+            for (let i = 0; i < data.length; i++) {
+                learned.push(data[i].item_name);
+            }
+            console.log(learned);
+        })
+        db.query(sql2, (err) => {
+            console.log('Purchase completed')
+        })
     } else {
-        
+        res.render('register');
     }
 })
-
-// ALTER TABLE customers ADD COLUMN spells_learned_${id} TEXT WHERE id = ${userid};
 
 function initialize(passport, username, password) {
     const authenticate = async (username, password, done) => {

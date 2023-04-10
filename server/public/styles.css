@@ -28,26 +28,45 @@
     padding: none;
     background-color: rgb(70, 86, 150);
     border: 1px solid rgb(70, 86, 150);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #user-form {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
-#user-form * {
+#user-form *, #register-form * {
     margin: 5px;
+    line-height: 1.5;
+    font-size: 120%;
 }
-h1 {
+#register-form {
+    display: flex;
+    justify-content: center;
+}
+#register-form label {
+    color: white;
+    font-size: bold;
+}
+.title {
     color: rgba(206, 166, 106, 0.689);
     display: block;
     position: absolute;
     align-self: center;
-    top: 30%;
-    -webkit-text-stroke: 1px white;
+    top: 20%;
+    font-size: 500%;
+    -webkit-text-stroke: 1px rgb(85, 57, 14);
 }
+ #register-page #register-title {
+    position: absolute;
+    top: 5%;
+} 
 #username, #password {
-    background-color: rgba(173, 216, 230, 0.86);
+    background-color: rgba(173, 216, 230, 0.5);
     display: inline-block;
-    border: 2px solid white;
+    border-bottom: 2px solid white;
 }
 .balance {
     color: grey;
@@ -61,12 +80,101 @@ h1 {
     bottom: 10px;
     right: 50px;
 }
-.login-page-btn {
-    height: 50px; 
+.user-btn {
     width: auto;
-    border-radius: 40px;
+    border-radius: 10px;
     padding: 10px;
+    float: center;
 }
 button:hover {
     cursor: pointer;
+}
+#register-div {
+    position: absolute;
+    min-height: 60%;
+    max-height: 80%;
+    min-width: 50%;
+    border: 4px solid rgb(34, 42, 76);
+    box-shadow: 0px 0px 5px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    top: 30%;
+}
+#register-div * {
+    display: block;
+}
+.ui-btn {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.178);
+}
+#existing-user {
+    position: relative;
+    min-width: 100%;
+    bottom: 0;
+    left: 0;
+}
+a {
+    text-decoration-line: none;
+}
+button {
+    font-weight: bolder;
+    line-height: 2;
+}
+#register-new-user {
+    position: relative;
+    min-width: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    justify-self: center;
+} 
+#register-btn-wrap {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    margin-left: 0;
+    margin-top: 10%;
+    padding: none;
+}
+#nickname {
+    background-color: rgba(51, 255, 61, 0.3);
+}
+#wrap-r {
+    position: absolute;
+    bottom: 10%;
+    width: 25%;
+}
+#register {
+    width: 100%;
+    background-color:rgba(0, 0, 0, 0.496);
+    border: none;
+}
+#register:hover {
+    border: 1px solid white;
+    color: white;
+}
+#register:active {
+    border: none;
+    color: green;
+}
+#wrap-l {
+    position: absolute; 
+    width: 100%;
+    left: 0;
+    display: flex;
+    justify-content: center;
+}
+#login {
+    position: absolute;
+    top: 30px;
+    background-color: rgba(0, 0, 0, 0.044);
+}
+#login:hover {
+    color:rgba(206, 166, 106, 0.689)
+}
+#login:active {
+    color: white;
 }

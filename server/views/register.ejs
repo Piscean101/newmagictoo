@@ -1,15 +1,22 @@
-<h1>Register Page</h1>
+<head>
+    <link rel="stylesheet" href="/styles.css" type="text/css">
+</head>
 
-<form action="/register" method="POST">
+<div id="page-wrapper">
+<div id="register-page" class="default">
+<h1 id="register-title" class="title">Registration</h1>
+
+<div id="register-div">
+<form id="register-form" action="/register" method="POST">
     <label for="username">Username</label>
     <input type="text" name="username" id="username" required>
     <label for="password">Password</label>
     <input type="text" name="password" id="password" required>
     <label for="nickname">Profile Name</label>
     <input type="text" name="nickname" id="nickname" required>
-    <button type="submit">Register</button>
 </form>
-
+<div id="register-btn-wrap"><button type="submit" form="register-form" id="register-new-user" class="ui-btn">Register</button>
+<a href="/login"><button id="existing-user" class="ui-btn">I already have an account</button></a></div>
+</div></div>
 <h2 id="register-status"><%= locals.message %></h2>
-
-<a href="/login">Login</a>
+</div>

@@ -1,20 +1,20 @@
 <div id="page-wrapper">
 <div id="loginpage">
-<h1>Login</h1>
+<h1 id="login-title" class="title">Magic Boat</h1>
 <head>
     <link href="/styles.css" type="text/css" rel="stylesheet"/>
 </head>
 <div id="user-form">
 <form action="/login/password" method="POST">
-    <label for="username">Username</label>
+    <label for="username" style="color: white; font-weight: bold;">Username</label>
     <input type="text" name="username" id="username" required>
-    <label for="password">Password</label>
+    <label for="password" style="color: white; font-weight: bold;">Password</label>
     <input type="text" name="password" id="password" required>
- 
-    <button type="submit" id="login" class="login-page-btn">Login</button>
+    
+    <div id="wrap-l"><button type="submit" id="login" class="user-btn">Log In</button></div>
 </form>
-<a href="/register"><button id="register" class="login-page-btn">Register</button></a>
 </div>
+<div id="wrap-r"><a href="/register"><button id="register" class="user-btn">Register</button></a></div>
 <h2 id="login-status"><%= locals.message %></h2>
 </div>
 </div>

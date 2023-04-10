@@ -178,3 +178,24 @@ button {
 #login:active {
     color: white;
 }
+#register-status {
+    position: absolute;
+    bottom: 20%;
+    color: rgb(72, 72, 72);
+}
+#wrap-rs {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+#login-status {
+    color: rgb(184, 184, 184, 0.5);
+}
+#wrap-ls {
+    position: absolute; 
+    bottom: 20%;
+    width: 100%;
+    display: flex; 
+    justify-content: center;
+}

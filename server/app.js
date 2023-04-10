@@ -54,12 +54,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.render('login');
 });
-app.get('/login', (req, res) => {
+app.get('/welcome', (req, res) => {
     if (req.isAuthenticated()) {
-        res.render('welcome');
-    } else 
-   { res.render('login')}
-});
+        res.render('welcome')
+    } else {
+        res.render('register')
+    }
+})
+app.get('/login', (req, res) => {
+    res.render('login');
+})
 app.get('/register', (req, res) => {
     res.render('register')
 });
@@ -119,17 +123,26 @@ app.post('/register', (req, res) => {
     let nospace = lowercase.replace(" ","");
     let doesExist = `SELECT * FROM customers WHERE username = '${nospace}';`;
     db.query(doesExist, (err, exists) => {
-        console.log(exists);
-        console.log(exists.length)
+        console.log(exists.length);
         if (exists.length === 1) {
-        res.render('register', { message: 'Username taken'})
-        }  else if (exists.length === 0) { 
-        res.render('register', { message: 'Hello fair maiden'}) 
-    }
-    })
-    let register = `INSERT INTO customers (username, password, nickname) VALUES ('${req.body.username}','${req.body.password}','${req.body.nickname}')`;
+        res.render('register', { message: 'This username is not available, please try again', nickname: req.body.nickname });
+        } else if (exists.length === 0) { 
+        res.render('register', { message: 'Hello fair maiden. Registration successful!'})
+        let register = `INSERT INTO customers (username, password, nickname) VALUES ('${req.body.username}','${req.body.password}','${req.body.nickname}')`;
     db.query(register, () => {
         console.log('New User Registered', req.body.username);
+    })
+    }
+    })
+});
+app.post('/login/password', (req, res, next) => {
+    let query = `SELECT FROM customers WHER username = ${req.body.username}`;
+    db.query(query, (err) => {
+        if (query.length === 1) {
+            next();
+        } else { 
+            res.render('login', { message: 'Your username or password may be incorrect'});
+        }
     })
 });
 app.post('/login/password', (req, res, next) => {
@@ -139,7 +152,7 @@ app.post('/login/password', (req, res, next) => {
         req.body.password
     )
     next();
-})
+});
 app.post('/login/password', passport.authenticate('local', {
     successRedirect: `/welcome`,
     failureRedirect: '/login'

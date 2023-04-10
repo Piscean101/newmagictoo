@@ -1,0 +1,72 @@
+#page-wrapper {
+    position: absolute;
+    margin: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+#loginpage {
+    height: 100%; 
+    width: 100%;
+    opacity: 0.8;
+    position: relative;
+    margin: none;
+    background-image: url('./resources/photo-1553095066-5014bc7b7f2d.jpg');
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.default {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin: none;
+    padding: none;
+    background-color: rgb(70, 86, 150);
+    border: 1px solid rgb(70, 86, 150);
+}
+#user-form {
+    display: inline-flex;
+    justify-content: center;
+}
+#user-form * {
+    margin: 5px;
+}
+h1 {
+    color: rgba(206, 166, 106, 0.689);
+    display: block;
+    position: absolute;
+    align-self: center;
+    top: 30%;
+    -webkit-text-stroke: 1px white;
+}
+#username, #password {
+    background-color: rgba(173, 216, 230, 0.86);
+    display: inline-block;
+    border: 2px solid white;
+}
+.balance {
+    color: grey;
+}
+#wm {
+    position: relative;
+    left: 25px;
+}
+#logout {
+    position: absolute;
+    bottom: 10px;
+    right: 50px;
+}
+.login-page-btn {
+    height: 50px; 
+    width: auto;
+    border-radius: 40px;
+    padding: 10px;
+}
+button:hover {
+    cursor: pointer;
+}

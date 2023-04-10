@@ -1,15 +1,20 @@
-<h1>Login page</h1>
-
+<div id="page-wrapper">
+<div id="loginpage">
+<h1>Login</h1>
+<head>
+    <link href="/styles.css" type="text/css" rel="stylesheet"/>
+</head>
+<div id="user-form">
 <form action="/login/password" method="POST">
     <label for="username">Username</label>
     <input type="text" name="username" id="username" required>
     <label for="password">Password</label>
     <input type="text" name="password" id="password" required>
-    
-    <button type="submit">Login</button>
+ 
+    <button type="submit" id="login" class="login-page-btn">Login</button>
 </form>
-
+<a href="/register"><button id="register" class="login-page-btn">Register</button></a>
+</div>
 <h2 id="login-status"><%= locals.message %></h2>
-
-<a href="/register">Register</a>
-<a href="/">Home</a>
+</div>
+</div>

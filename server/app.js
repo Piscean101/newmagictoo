@@ -37,6 +37,7 @@ app.use(session({
     cookie: {
         secure: false,
         maxAge: 300000,
+        minAge: 8000
     }
 }));
 app.use(cookie());
@@ -51,11 +52,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Navigation Routes 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('login');
 });
 app.get('/login', (req, res) => {
     if (req.isAuthenticated()) {
-        res.render('index');
+        res.render('welcome');
     } else 
    { res.render('login')}
 });
@@ -63,8 +64,7 @@ app.get('/register', (req, res) => {
     res.render('register')
 });
 app.get('/index', (req, res) => {
-    res.render('index')
-    console.log(req.user)
+    res.render('index');
 });
 app.get('/cart/:ID', (req, res, next) => {
     res.render('cart');
@@ -114,8 +114,12 @@ app.get('/spells/filter/maxcost/:cost', (req, res) => {
 })
 // User Routes 
 app.post('/register', (req, res) => {
-    let doesExist = `SELECT * FROM customers WHERE username = '${req.body.username}';`;
+    let string = req.body.username.toString();
+    let lowercase = string.toLowerCase();
+    let nospace = lowercase.replace(" ","");
+    let doesExist = `SELECT * FROM customers WHERE username = '${nospace}';`;
     db.query(doesExist, (err, exists) => {
+        console.log(exists);
         console.log(exists.length)
         if (exists.length === 1) {
         res.render('register', { message: 'Username taken'})
@@ -134,13 +138,25 @@ app.post('/login/password', (req, res, next) => {
         req.body.username,
         req.body.password
     )
-    next()
+    next();
 })
 app.post('/login/password', passport.authenticate('local', {
-    successRedirect: `/~`,
+    successRedirect: `/welcome`,
     failureRedirect: '/login'
 })
 );
+app.get('/welcome', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.render('login');
+    }
+    if (!req.user.gold) {
+        req.user.gold = 'No ';
+    }
+    if (!req.user.gems) {
+        req.user.gems = 'No ';
+    }
+    res.render('welcome', { username: req.user.nickname , gold: req.user.gold, gems: req.user.gems });
+})
 app.get('/logout', (req, res) => {
     res.render('login');
     req.session.destroy();

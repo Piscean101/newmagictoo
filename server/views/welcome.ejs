@@ -4,10 +4,13 @@
 <div id="page-wrapper">
 <div id="welcomepage" class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Welcome <%= locals.username %>,</span><br>&nbsp;
-     Balance: <span style="font-size: 50%;"><span class="balance"><%= locals.gold %></span> Gold <span class="balance"><%= locals.gems %></span> Gems</span> </h2>
+     Balance: <span style="font-size: 50%;"><span class="balance"><%= locals.gold %></span> Gold <span class="balance"><%= locals.gems %></span> Gems</span>
+</h2>
+<div id="spell-wrap"><h3 id="spells"><%= locals.data %></h3></div>
+<div id="ab-wrap"><div id="access-bar">
+    <button id="minigame"><a href="/minigame">Play</a></button>
+    <button id="logout"><a href="/logout">Logout</a></button>
+</div></div>
 
-<form action="/logout" id="logout">
-    <button type="submit" id="logoutbtn">Logout</button>
-</form>
 </div>
 </div>

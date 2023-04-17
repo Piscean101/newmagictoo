@@ -15,6 +15,7 @@ const db = mysql.createConnection({
 const path = require('path');
 // const initializePass = require('./passport-config');
 const cookie = require('cookie-parser');
+const { error } = require('console');
 const LocalStrategy = require('passport-local').Strategy;
 // Initialization
 db.connect((err) => {
@@ -37,7 +38,7 @@ app.use(session({
     cookie: {
         secure: false,
         maxAge: 300000,
-        minAge: 2000
+        minAge: 20000
     }
 }));
 app.use(cookie());
@@ -54,13 +55,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.render('login');
 });
-app.get('/welcome', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render('welcome')
-    } else {
-        res.render('register')
-    }
-})
 app.get('/login', (req, res) => {
     res.render('login');
 })
@@ -92,12 +86,13 @@ app.get('/~/:username', (req, res) => {
     res.render('welcome', { username: req.params.username});
 });
 // Query Routes
-app.get('/spells', (req, res) => {
+/* app.get('/spells', (req, res) => {
     let sql = `SELECT * FROM spells;`;
     db.query(sql, (err, data) => {
-        res.send(data);
-    })
-});
+        res.locals.data = data;
+    });
+    res.end();
+}); */
 app.get('/spells/filter/id/:id', (req, res) => {
     let sql = `SELECT * FROM spells WHERE id = ${req.params.id};`;
     db.query(sql, (err, data) => {
@@ -136,9 +131,9 @@ app.post('/register', (req, res) => {
     })
 });
 app.post('/login/password', (req, res, next) => {
-    let query = `SELECT FROM customers WHER username = ${req.body.username}`;
-    db.query(query, (err) => {
-        if (query.length === 1) {
+    let sql = `SELECT * FROM customers WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
+    db.query(sql, (err, data) => {
+        if (data.length === 1) {
             next();
         } else { 
             res.render('login', { message: 'Your username or password may be incorrect'});
@@ -158,7 +153,7 @@ app.post('/login/password', passport.authenticate('local', {
     failureRedirect: '/login'
 })
 );
-app.get('/welcome', (req, res) => {
+app.get('/welcome', (req, res, next) => {
     if (!req.isAuthenticated()) {
         return res.render('login');
     }
@@ -168,18 +163,27 @@ app.get('/welcome', (req, res) => {
     if (!req.user.gems) {
         req.user.gems = 'No ';
     }
-    res.render('welcome', { username: req.user.nickname , gold: req.user.gold, gems: req.user.gems });
+    let sql = `SELECT * FROM spells;`;
+    db.query(sql, (err, data) => {
+    let random = Math.floor(Math.random() * data.length);
+    res.render('welcome', 
+        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , data: data[random].name});
+
+    });
 })
-app.get('/logout', (req, res) => {
+;app.get('/logout', (req, res) => {
     res.render('login');
     req.session.destroy();
     req.logOut( () => {
         console.log('bye felicia')
     });
 })
-app.get('/~', (req, res) => {
-//    console.log(req.user.id);
-    res.render('index', { username: req.user })
+app.get('/minigame', (req, res) => {
+    if (!req.isAuthenticated()) {
+        res.render('login');
+    }
+    res.sendFile('minigame.html',  { root: __dirname });
+    console.log(req.user)
 })
 // Purchase Routes
 app.get('/addCart/:itemID', (req, res) => {

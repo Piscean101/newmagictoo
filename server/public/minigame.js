@@ -19,18 +19,21 @@ setInterval(countdown, 1000);
 })
 const submit = document.getElementById('play-submit');
 const input = document.getElementById('play-input');
-submit.addEventListener('click', () => {
+const playstatus = document.getElementById('play-status');
+submit.addEventListener('click', (e) => {
+    e.preventDefault();
     let valuetest = input.value;
     if (!valuetest) {
         newQuestion(options,valid);
     }
     if (valuetest != correct) {
-        console.log('skunk');
+        playstatus.innerHTML = 'You was Wrong'
     } else (
-        console.log('butterfly')
+        playstatus.innerHTML = 'Correct!'
     )
     input.value = '';
-})
+    playstatus.classList.add('status-fade');
+}, false)
 });
 console.log('boope');
 

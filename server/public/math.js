@@ -68,6 +68,7 @@ export default class Maths {
 }
 export let correct = [];
 export function newQuestion (option1, option2) {
+    document.getElementById('play-status').classList.remove('status-fade');
     let choice1 = options[Math.floor(Math.random()*option1.length)];
     let choice2 = valid[Math.floor(Math.random()*option2.length)];
     let newAnswer = new Maths (choice1, choice2);

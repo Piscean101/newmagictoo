@@ -1,4 +1,6 @@
+
 // Dependencies
+
 const passport = require('passport');
 const express = require('express');
 const app = express();
@@ -13,11 +15,12 @@ const db = mysql.createConnection({
     PORT: 3306
 });
 const path = require('path');
-// const initializePass = require('./passport-config');
 const cookie = require('cookie-parser');
 const { error } = require('console');
 const LocalStrategy = require('passport-local').Strategy;
+
 // Initialization
+
 db.connect((err) => {
     if(!err) {
         console.log('Bobs')
@@ -49,9 +52,9 @@ app.listen(3000, () => {
 });
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
-// Routes "normally contained in a 'controller' directory"
 
 // Navigation Routes 
+
 app.get('/', (req, res) => {
     res.render('login');
 });
@@ -75,24 +78,9 @@ app.get('/cart/:ID', (req, res) => {
         res.send(data);
     })
 })
-app.get('/checkout', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render('checkout')
-    } else {
-        res.render('login')
-    }
-})
-app.get('/~/:username', (req, res) => {
-    res.render('welcome', { username: req.params.username});
-});
+
 // Query Routes
-/* app.get('/spells', (req, res) => {
-    let sql = `SELECT * FROM spells;`;
-    db.query(sql, (err, data) => {
-        res.locals.data = data;
-    });
-    res.end();
-}); */
+
 app.get('/spells/filter/id/:id', (req, res) => {
     let sql = `SELECT * FROM spells WHERE id = ${req.params.id};`;
     db.query(sql, (err, data) => {
@@ -252,3 +240,6 @@ function initialize(passport, username, password) {
     passport.serializeUser( function(user, done) { return done (null, user)});
     passport.deserializeUser( function(user, done) { return done(null, user)});
 }
+app.get('*', (req, res) => {
+    res.status(404).send('The page you requested does not exicst on this server.');
+  });

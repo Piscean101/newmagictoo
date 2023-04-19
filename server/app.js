@@ -77,28 +77,41 @@ app.get('/cart/:ID', (req, res) => {
     db.query(sql, (err, data) => {
         res.send(data);
     })
-})
+});
+app.get('/welcome', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.render('login');
+    }
+    if (!req.user.gold) {
+        req.user.gold = 'No ';
+    }
+    if (!req.user.gems) {
+        req.user.gems = 'No ';
+    }
+    let sql = `SELECT * FROM spells;`;
+    db.query(sql, (err, data) => {
+    let random = Math.floor(Math.random() * data.length);
+    res.render('welcome', 
+        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , data: data[random].name});
+    });
+});
+app.get('/logout', (req, res) => {
+    res.render('login');
+    req.session.destroy();
+    req.logOut( () => {
+        console.log('bye felicia')
+    });
+});
+app.get('/minigame', (req, res) => {
+    if (!req.isAuthenticated()) {
+        res.render('login');
+    }
+    res.sendFile('minigame.html',  { root: __dirname });
+    console.log(req.user)
+});
 
 // Query Routes
 
-app.get('/spells/filter/id/:id', (req, res) => {
-    let sql = `SELECT * FROM spells WHERE id = ${req.params.id};`;
-    db.query(sql, (err, data) => {
-        res.send(data);
-    })
-});
-app.get('/spells/filter/element/:element', (req, res) => {
-    let sql = `SELECT * FROM spells WHERE element = '${req.params.element}'`;
-    db.query(sql, (err, data) => {
-        res.send(data);
-    })
-});
-app.get('/spells/filter/maxcost/:cost', (req, res) => {
-    let sql = `SELECT * FROM spells WHERE cost < ${req.params.cost}`;
-    db.query(sql, (err, data) => {
-        res.send(data);
-    })
-})
 // User Routes 
 app.post('/register', (req, res) => {
     let string = req.body.username.toString();
@@ -141,39 +154,21 @@ app.post('/login/password', passport.authenticate('local', {
     failureRedirect: '/login'
 })
 );
-app.get('/welcome', (req, res, next) => {
+
+// Purchase Routes
+
+app.post('/claimgold', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.render('login');
     }
-    if (!req.user.gold) {
-        req.user.gold = 'No ';
-    }
-    if (!req.user.gems) {
-        req.user.gems = 'No ';
-    }
-    let sql = `SELECT * FROM spells;`;
-    db.query(sql, (err, data) => {
-    let random = Math.floor(Math.random() * data.length);
-    res.render('welcome', 
-        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , data: data[random].name});
-
-    });
+    let sql = `SELECT gold FROM customers WHERE username = '${req.user.username}'`;
+    let claimnumber = 0;
+    claimnumber += req.body.hidden;
+    console.log(req.body.hidden);
+    console.log(claimnumber, ' claimnumber submitted');
+//    let sql2 = `UPDATE customers SET gold = ${claimnumber} WHERE username = '${req.user.username}'`;
+    res.redirect('/welcome');
 })
-;app.get('/logout', (req, res) => {
-    res.render('login');
-    req.session.destroy();
-    req.logOut( () => {
-        console.log('bye felicia')
-    });
-})
-app.get('/minigame', (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.render('login');
-    }
-    res.sendFile('minigame.html',  { root: __dirname });
-    console.log(req.user)
-})
-// Purchase Routes
 app.get('/addCart/:itemID', (req, res) => {
     if (req.isAuthenticated()){ 
     console.log(req.user);
@@ -241,5 +236,5 @@ function initialize(passport, username, password) {
     passport.deserializeUser( function(user, done) { return done(null, user)});
 }
 app.get('*', (req, res) => {
-    res.status(404).send('The page you requested does not exicst on this server.');
+    res.status(404).send('The page you requested does not exist on this server.');
   });

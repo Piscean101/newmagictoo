@@ -38,10 +38,16 @@
     align-items: center;
     font-size: 120%;
 }
+#wrap-uf {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 #user-form {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 #user-form *, #register-form * {
     margin: 5px;
@@ -159,7 +165,7 @@
     width: 25%;
 }
 #register {
-    width: 100%;
+    min-width: 100%;
     background-color:rgba(0, 0, 0, 0.496);
     color: rgba(255, 255, 255, 0.5);
     font-size: 150%;
@@ -227,6 +233,13 @@ button {
     position: absolute;
     bottom: 3%;
     right: 50px;
+    max-height: 100px;
+    border: 2px solid red;
+}
+#access-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 #access-bar * {
     margin: 25px;
@@ -235,6 +248,24 @@ button {
 #logout {
     background-color: rgb(255, 81, 0);
     color: rgb(93, 0, 0);
+}
+#claim {
+    display: none;
+    position: relative;
+    bottom: 50%;
+}
+button {
+    text-align: center;
+}
+#claimgold * {
+    text-align: center;
+}
+#claim.general-fade {
+    display: inline-block;
+    animation: general-fade 1500ms forwards;
+}
+#claim-gold {
+    color: rgb(25, 185, 41);
 }
 .ui-btn {
     padding: 10px;
@@ -317,6 +348,9 @@ button {
     position: absolute;
     bottom: -60px;
     padding: 5px;
+    background-color:rgb(249, 249, 124);
+    color:rgb(85, 57, 14);
+
 }
 #play-status {
     visibility: hidden;
@@ -354,5 +388,43 @@ button {
     } 
     to {
         font-size: 100%;
+    }
+}
+@keyframes general-fade {
+    from {
+        font-size: 20%;
+    }
+    to {
+        font-size: 100%;
+    }
+}
+
+
+/* MEDIA QUERY */
+
+
+@media only screen and (max-width: 900px) {
+    #login {
+        top: 100px;
+    }
+}
+@media only screen and (max-width: 480px) { 
+    .title {
+        font-size: 250%;
+        top: 25%;
+    }
+    #wm {
+        padding: 10px 15px 10px 15px;
+        left: 5px;
+        top: 0px;
+    }
+}
+@media only screen and (max-width: 400px) {
+    #access-bar * {
+        margin: 10px;
+        height: 30px;
+    }
+    #ab-wrap {
+        bottom: 10%;
     }
 }

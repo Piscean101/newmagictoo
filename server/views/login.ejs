@@ -4,12 +4,12 @@
 <head>
     <link href="/styles.css" type="text/css" rel="stylesheet"/>
 </head>
-<div id="user-form">
-<form action="/login/password" method="POST">
-    <label for="username" style="color: white; font-weight: bold;">Username</label>
-    <input type="text" name="username" id="username" required>
-    <label for="password" style="color: white; font-weight: bold;">Password</label>
-    <input type="password" name="password" id="password" required>
+<div id="wrap-uf">
+<form action="/login/password" method="POST" id="user-form">
+    <div id="U"><label for="username" style="color: white; font-weight: bold;">Username</label>
+    <input type="text" name="username" id="username" required></div>
+    <div id="P"><label for="password" style="color: white; font-weight: bold;">Password</label>
+    <input type="password" name="password" id="password" required></div>
     
     <div id="wrap-l"><button type="submit" id="login" class="user-btn">Log In</button></div>
 </form>

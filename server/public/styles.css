@@ -233,16 +233,18 @@ button {
     position: absolute;
     bottom: 3%;
     right: 50px;
-    max-height: 100px;
-    border: 2px solid red;
+    max-height: 150px;
+    background-color:rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 5px 5px black inset;
 }
 #access-bar {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 #access-bar * {
-    margin: 25px;
+    margin: 15px;
     height: 50px;
 }
 #logout {
@@ -251,11 +253,17 @@ button {
 }
 #claim {
     display: none;
-    position: relative;
-    bottom: 50%;
+    background-color:rgb(249, 249, 124);
+    border: 3px solid green;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 button {
     text-align: center;
+}
+#claimgold {
+    display: flex;
+    align-items: center;
 }
 #claimgold * {
     text-align: center;
@@ -332,6 +340,7 @@ button {
     display: flex;
     justify-content: center;
     position: relative;
+    align-items: center;
 }
 #play-input {
     margin-top: 20px;
@@ -418,13 +427,18 @@ button {
         left: 5px;
         top: 0px;
     }
+    #ab-wrap {
+        padding: 10px;
+        right: 10px;
+        left: 10px;
+    }
 }
 @media only screen and (max-width: 400px) {
     #access-bar * {
         margin: 10px;
-        height: 30px;
+        height: 50px;
     }
-    #ab-wrap {
-        bottom: 10%;
+    #play-question {
+        left: 15px;
     }
 }

@@ -1,3 +1,4 @@
+import { cashout } from "./minigame.js";
 export default class Maths {
     constructor(calculation, proc) {
         this.answerbody = {
@@ -75,6 +76,7 @@ export function newQuestion (option1, option2) {
     let newAnswer = new Maths (choice1, choice2);
     correct = newAnswer[1];
     document.getElementById('play-question').innerHTML = newAnswer[0];
+    document.getElementById('play-overlay').innerHTML = 5;
 }
 export const options = [
     'add',
@@ -91,6 +93,5 @@ export const valid = [
     false,
     false,
 ];
-// setInterval(newQuestion(options), 5000);
-// } 
+
 

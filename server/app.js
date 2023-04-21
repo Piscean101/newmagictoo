@@ -41,7 +41,7 @@ app.use(session({
     cookie: {
         secure: false,
         maxAge: 300000,
-        minAge: 20000
+        minAge: 200000
     }
 }));
 app.use(cookie());
@@ -54,7 +54,6 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Navigation Routes 
-
 app.get('/', (req, res) => {
     res.render('login');
 });
@@ -83,10 +82,10 @@ app.get('/welcome', (req, res) => {
         return res.render('login');
     }
     if (!req.user.gold) {
-        req.user.gold = 'No ';
+        res.locals.gold = 0;
     }
     if (!req.user.gems) {
-        req.user.gems = 'No ';
+        res.locals.gems = 0;
     }
     let sql = `SELECT * FROM spells;`;
     db.query(sql, (err, data) => {
@@ -95,19 +94,11 @@ app.get('/welcome', (req, res) => {
         { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , data: data[random].name});
     });
 });
-app.get('/logout', (req, res) => {
-    res.render('login');
-    req.session.destroy();
-    req.logOut( () => {
-        console.log('bye felicia')
-    });
-});
 app.get('/minigame', (req, res) => {
     if (!req.isAuthenticated()) {
         res.render('login');
     }
     res.sendFile('minigame.html',  { root: __dirname });
-    console.log(req.user)
 });
 
 // Query Routes
@@ -154,21 +145,30 @@ app.post('/login/password', passport.authenticate('local', {
     failureRedirect: '/login'
 })
 );
+app.get('/logout', (req, res) => {
+    res.render('login');
+    req.session.destroy();
+    req.logOut( () => {
+        console.log('bye felicia')
+    });
+});
 
 // Purchase Routes
 
 app.post('/claimgold', (req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.render('login');
-    }
-    let sql = `SELECT gold FROM customers WHERE username = '${req.user.username}'`;
-    let claimnumber = 0;
-    claimnumber += req.body.hidden;
-    console.log(req.body.hidden);
-    console.log(claimnumber, ' claimnumber submitted');
-//    let sql2 = `UPDATE customers SET gold = ${claimnumber} WHERE username = '${req.user.username}'`;
-    res.redirect('/welcome');
-})
+    if (req.isAuthenticated()) {
+    let claim = (Math.abs(req.body.hidden) + Math.abs(req.user.gold));
+    let sql2 = `UPDATE customers SET gold = ${claim} WHERE username = '${req.user.username}'`;
+    db.query(sql2, (err, data) => {
+        if (err) { 
+            console.log(err)
+        }
+    })
+    res.render('login');
+} else {
+    res.render('register');
+}
+});
 app.get('/addCart/:itemID', (req, res) => {
     if (req.isAuthenticated()){ 
     console.log(req.user);
@@ -219,7 +219,7 @@ function initialize(passport, username, password) {
         db.query(P, (err, userData) => {
             if (userData.length > 0) {
                 const user = userData[0];
-                console.log(user);
+            //    console.log(user);
                 console.log(`${username} / ${user.nickname} Logged In Successfully`);
                 return done(null, user)
             } else {

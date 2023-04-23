@@ -1,15 +1,45 @@
 <head>
     <link rel="stylesheet" href="/styles.css"/>
+    <script src="/shop.js"></script>
 </head>
 <div id="page-wrapper">
 <div id="welcomepage" class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Welcome <%= locals.username %>,</span><br>&nbsp;
     <span style="font-size: 50%;">Bank:<span class="balance"> <%= locals.gold %></span> Gold <span class="balance"><%= locals.gems || 0 %></span> Gems</span>
 </h2>
-<div id="spell-wrap"><h3 id="spells"><%= locals.data %></h3></div>
+<div id="shop">
+<button id="spell-btn-1" class="spell-btn">
+<div id="spell-wrap">
+    <div id="info-bg"></div><h3 id="spells"><%= locals.data %></h3>
+    <div id="spell-element-wrap">
+        <h5 id="spell-element"><%= locals.element %></h3>
+        <img src="<%= locals.image %>" height="25px" width="25px">
+    </div>
+    <div id="spell-info-wrap">
+        <div id="info-bg"></div><h5 id="spell-rank">Cost: <%= locals.cost %> (<span style="color: white"><%= locals.gemcost  %></span>)</h5>
+    </div>
+    
+</div>
+</button>
+<button id="spell-btn-2" class="spell-btn">
+<div id="spell-wrap">
+    <div id="info-bg"></div><h3 id="spells"><%= locals.admindata %></h3>
+    <div id="spell-element-wrap">
+        <h5 id="spell-element"><%= locals.adminelement %></h3>
+        <img src="<%= locals.adminimage %>" height="25px" width="25px">
+    </div>
+    <div id="spell-info-wrap">
+        <div id="info-bg"></div><h5 id="spell-rank">Cost: <span style="color:red"><%= locals.salecost %></span> (<span style="color: white"><%= locals.gemadmin %></span>)</h5>
+    </div>
+    <h5 id="featured">30% OFF</h5>
+</div>
+</button>
+</div>
+<!-- <form ><button type="submit"><img src="/resources/toggle.png" height="30px" width="30px" id="toggle" onclick=""></button></form> -->
 <div id="ab-wrap"><div id="access-bar">
-    <button id="minigame"><a href="/minigame">Play</a></button>
-    <button id="logout"><a href="/logout">Logout</a></button>
+    <button id="cart" class="homebtn"><a href="/cart">Cart</a></button>
+    <button id="minigame" class="homebtn"><a href="/minigame">Play</a></button>
+    <button id="logout" class="homebtn"><a href="/logout">Logout</a></button>
 </div></div>
 
 </div>

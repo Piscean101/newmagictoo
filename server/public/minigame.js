@@ -25,6 +25,8 @@ const playstatus = document.getElementById('play-status');
 const claimgold = document.getElementById('claim-gold');
 const claim = document.getElementById('claim');
 const hiddengold = document.getElementById('hidden-gold');
+const counter = document.getElementById('counter');
+const gemcount = document.getElementById('gem-count');
 submit.addEventListener('click', (e) => {
     submit.style.visibility = 'hidden';
     e.preventDefault();
@@ -34,17 +36,25 @@ submit.addEventListener('click', (e) => {
     }
     if (valuetest != correct) {
         playstatus.innerHTML = `Nice Try! The correct answer was ${correct}`;
-    } else (
+        counter.value = 0;
+    } else {
         cashout ++,
-        playstatus.innerHTML = 'Correct!',
-        document.getElementById('logout').style.display = 'none',
-        setTimeout(document.getElementById('claim').classList.add('general-fade'), 3000),
-        claimgold.innerHTML = cashout,
-        hiddengold.value ++,
-        console.log(hiddengold.value)
-    )
+        playstatus.innerHTML = 'Correct!';
+        document.getElementById('logout').style.display = 'none';
+        setTimeout(document.getElementById('claim').classList.add('general-fade'), 3000);
+        claimgold.innerHTML = cashout;
+        hiddengold.value ++;
+        counter.value ++;
+        if (time > 1) { 
+            time = 1
+        }
+    }
     input.value = '';
     playstatus.classList.add('status-fade');
+    if (counter.value >= 10) {
+        gemcount.value ++;
+        counter.value = 0;
+    }
 }, false)
 claim.addEventListener('click', (e) => {
 })

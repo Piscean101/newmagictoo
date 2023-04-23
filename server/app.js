@@ -54,6 +54,12 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Navigation Routes 
+app.get('*', (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        return res.render('login')
+    }
+    next();
+})
 app.get('/', (req, res) => {
     res.render('login');
 });
@@ -66,13 +72,20 @@ app.get('/register', (req, res) => {
 app.get('/index', (req, res) => {
     res.render('index');
 });
-app.get('/cart/:ID', (req, res, next) => {
-    res.render('cart');
-    console.log(req.user);
+app.get('/cart', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.render('login');
+    }
+    res.redirect(`/cart/${req.user.nickname}`);
+})
+app.get('/cart/:nickname', (req, res, next) => {
+    res.render('cart', {
+        name: req.user.nickname , gold: req.user.gold , gems: req.user.gems
+    });
 //    next();
 });
-app.get('/cart/:ID', (req, res) => {
-    let sql = `SELECT * FROM carts WHERE user_id = ${req.params.ID}`;
+app.get('/cart/:nickname', (req, res) => {
+    let sql = `SELECT * FROM carts WHERE user_id = ${req.params.nickname}`;
     db.query(sql, (err, data) => {
         res.send(data);
     })
@@ -87,11 +100,18 @@ app.get('/welcome', (req, res) => {
     if (!req.user.gems) {
         res.locals.gems = 0;
     }
-    let sql = `SELECT * FROM spells;`;
+    let sql = `SELECT * FROM spells WHERE admin_choice is NULL UNION SELECT * FROM spells WHERE admin_choice IS NOT NULL`;
     db.query(sql, (err, data) => {
-    let random = Math.floor(Math.random() * data.length);
+    let random = Math.floor((Math.random() * data.length) -1);
+    if (random < 1) {
+        random += 1;
+    }
+    let adminoption = data[data.length - 1];
+    let salecost = Math.ceil((adminoption.cost/10)*7);
     res.render('welcome', 
-        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , data: data[random].name});
+        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , 
+            data: data[random].name, element: data[random].element , rank: data[random].spell_rank , cost: data[random].cost , image: data[random].image , gemcost: data[random].gem_cost ,
+            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost });
     });
 });
 app.get('/minigame', (req, res) => {
@@ -154,7 +174,23 @@ app.get('/logout', (req, res) => {
 });
 
 // Purchase Routes
-
+app.post('/claimgold', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        let gem_count = Math.abs(req.body.gemcount);
+        if (gem_count > 0) {
+            let claim = (gem_count + Math.abs(req.user.gems));
+            let sql2 = `UPDATE customers SET gems = ${claim} WHERE username = '${req.user.username}'`;
+            db.query(sql2, (err, data) => {
+                if (err) { 
+                    console.log(err)
+                }
+            })
+        }
+    next();
+} else {
+    res.render('register');
+} 
+});
 app.post('/claimgold', (req, res) => {
     if (req.isAuthenticated()) {
     let claim = (Math.abs(req.body.hidden) + Math.abs(req.user.gold));
@@ -167,7 +203,7 @@ app.post('/claimgold', (req, res) => {
     res.render('login');
 } else {
     res.render('register');
-}
+} 
 });
 app.get('/addCart/:itemID', (req, res) => {
     if (req.isAuthenticated()){ 

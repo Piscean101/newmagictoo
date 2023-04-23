@@ -7,7 +7,7 @@ export default class Maths {
         }
         let question = [];
         let numerator = Math.floor(Math.random()*11);
-        let denominator = Math.floor(Math.random()*11) + Math.floor(Math.random()*6);
+        let denominator = Math.floor(Math.random()*5) + Math.floor(Math.random()*5) + Math.floor(Math.random()*5);
         let denominator2 = Math.floor(Math.random()*21);
         let answer = 0;
         let answerbody = [];

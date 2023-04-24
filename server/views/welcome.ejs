@@ -16,20 +16,46 @@
         <img src="<%= locals.image %>" height="25px" width="25px">
     </div>
     <div id="spell-info-wrap">
-        <div id="info-bg"></div><h5 id="spell-rank">Cost: <%= locals.cost %> (<span style="color: white"><%= locals.gemcost  %></span>)</h5>
+        <div id="info-bg"></div><h5 id="spell-rank">Cost: <%= locals.cost %> [<span style="color: white"><%= locals.gemcost  %></span>]</h5>
     </div>
     
 </div>
 </button>
 <button id="spell-btn-2" class="spell-btn">
+    <div id="spell-wrap">
+        <div id="info-bg"></div><h3 id="spells"><%= locals.data2 %></h3>
+        <div id="spell-element-wrap">
+            <h5 id="spell-element"><%= locals.element2 %></h3>
+            <img src="<%= locals.image2 %>" height="25px" width="25px">
+        </div>
+        <div id="spell-info-wrap">
+            <div id="info-bg"></div><h5 id="spell-rank">Cost: <%= locals.cost2 %> [<span style="color: white"><%= locals.gemcost2  %></span>]</h5>
+        </div>
+        
+    </div>
+    </button>
+    <button id="spell-btn-3" class="spell-btn">
+        <div id="spell-wrap">
+            <div id="info-bg"></div><h3 id="spells"><%= locals.data3 %></h3>
+            <div id="spell-element-wrap">
+                <h5 id="spell-element"><%= locals.element3 %></h3>
+                <img src="<%= locals.image3 %>" height="25px" width="25px">
+            </div>
+            <div id="spell-info-wrap">
+                <div id="info-bg"></div><h5 id="spell-rank">Cost: <%= locals.cost3 %> [<span style="color: white"><%= locals.gemcost3  %></span>]</h5>
+            </div>
+            
+        </div>
+        </button>
+<button id="spell-btn-admin" class="spell-btn">
 <div id="spell-wrap">
-    <div id="info-bg"></div><h3 id="spells"><%= locals.admindata %></h3>
+    <div id="info-bg-admin" class="spell-btn"></div><h3 id="spells"><%= locals.admindata %></h3>
     <div id="spell-element-wrap">
         <h5 id="spell-element"><%= locals.adminelement %></h3>
         <img src="<%= locals.adminimage %>" height="25px" width="25px">
     </div>
     <div id="spell-info-wrap">
-        <div id="info-bg"></div><h5 id="spell-rank">Cost: <span style="color:red"><%= locals.salecost %></span> (<span style="color: white"><%= locals.gemadmin %></span>)</h5>
+        <div id="info-bg-admin"></div><h5 id="spell-rank">Cost: <span style="color:red"><%= locals.salecost %></span> [<span style="color: white"><%= locals.gemadmin %></span>]</h5>
     </div>
     <h5 id="featured">30% OFF</h5>
 </div>

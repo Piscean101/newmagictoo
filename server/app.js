@@ -100,19 +100,30 @@ app.get('/welcome', (req, res) => {
     if (!req.user.gems) {
         res.locals.gems = 0;
     }
-    let sql = `SELECT * FROM spells WHERE admin_choice is NULL UNION SELECT * FROM spells WHERE admin_choice IS NOT NULL`;
-    db.query(sql, (err, data) => {
-    let random = Math.floor((Math.random() * data.length) -1);
-    if (random < 1) {
-        random += 1;
-    }
-    let adminoption = data[data.length - 1];
+    let sql = `SELECT * FROM spells WHERE admin_choice is NULL AND cost >= 75`;
+    db.query(sql, (err, spelldata) => {
+    let random = Math.floor((Math.random() * spelldata.length));
+        let sql2 = `SELECT * FROM spells WHERE admin_choice = 'true'`;
+        db.query(sql2, (err, data) => {
+    let adminoption = data[0];
     let salecost = Math.ceil((adminoption.cost/10)*7);
+            let sql3 = `SELECT * FROM spells WHERE admin_choice is NULL AND id != ${spelldata[random].id}`;
+            db.query(sql3, (err, spelldata2) => {
+    let random2 = Math.floor(Math.random() * spelldata2.length);
+            let sql4 = `SELECT * FROM spells WHERE admin_choice is NULL AND id != ${spelldata[random].id} AND id != ${spelldata2[random2].id}`;
+            db.query(sql4, (err, spelldata3) => {
+    let random3 = Math.floor(Math.random() * spelldata3.length);
     res.render('welcome', 
         { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , 
-            data: data[random].name, element: data[random].element , rank: data[random].spell_rank , cost: data[random].cost , image: data[random].image , gemcost: data[random].gem_cost ,
-            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost });
+            data: spelldata[random].name, element: spelldata[random].element , rank: spelldata[random].spell_rank , cost: spelldata[random].cost , image: spelldata[random].image , gemcost: spelldata[random].gem_cost ,
+            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost ,
+            data2: spelldata2[random2].name, element2: spelldata2[random2].element , rank2: spelldata2[random2].spell_rank , cost2: spelldata2[random2].cost , image2: spelldata2[random2].image , gemcost2: spelldata2[random2].gem_cost ,
+            data3: spelldata3[random3].name, element3: spelldata3[random3].element , rank3: spelldata3[random3].spell_rank , cost3: spelldata3[random3].cost , image3: spelldata3[random3].image , gemcost3: spelldata3[random3].gem_cost ,
+        });
+            })
+            })
     });
+        })
 });
 app.get('/minigame', (req, res) => {
     if (!req.isAuthenticated()) {

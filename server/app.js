@@ -78,19 +78,29 @@ app.get('/cart', (req, res) => {
     }
     res.redirect(`/cart/${req.user.nickname}`);
 })
-app.get('/cart/:nickname', (req, res, next) => {
-    res.render('cart', {
-        name: req.user.nickname , gold: req.user.gold , gems: req.user.gems
-    });
-//    next();
-});
 app.get('/cart/:nickname', (req, res) => {
-    let sql = `SELECT * FROM carts WHERE user_id = ${req.params.nickname}`;
+    let sql = `SELECT DISTINCT * FROM carts WHERE user_name = '${req.user.username}' LIMIT 10`;
     db.query(sql, (err, data) => {
-        res.send(data);
+        let cartList = [];
+        let cartGold = [];
+        let cartGems = [];
+        let goldTotal = 0;
+        let gemTotal = 0;
+        for (let i = 0; i < data.length ; i++) {
+            cartList.push(data[i].item_name);
+            cartGold.push(Math.abs(data[i].gold_cost));
+            cartGems.push(`[${Math.abs(data[i].gem_cost)}]`);
+            goldTotal += Math.abs(data[i].gold_cost);
+            gemTotal += (Math.abs(data[i].gem_cost))
+        }
+        res.render('cart', {
+            name: req.user.nickname , gold: req.user.gold , gems: req.user.gems, items: cartList ,
+             itemgold: cartGold , itemgems: cartGems , goldTotal: goldTotal , gemTotal: gemTotal , userid: req.user.id
+        });
     })
 });
 app.get('/welcome', (req, res) => {
+    console.log(req.user);
     if (!req.isAuthenticated()) {
         return res.render('login');
     }
@@ -216,48 +226,47 @@ app.post('/claimgold', (req, res) => {
     res.render('register');
 } 
 });
-app.get('/addCart/:itemID', (req, res) => {
-    if (req.isAuthenticated()){ 
-    console.log(req.user);
-    let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_Cost) VALUES (${req.user.id}, '${req.user.username}', '${req.body.itemName}', ${req.body.gold}, ${req.body.gems})`;
-    db.query(sql, (err) => {
-        if (err) {
-            return (err)
-        } else {
-            console.log('Item Selected')
-        }
-    })} else {
-        res.render('register');
+app.post('/addspell/:itemName', (req, res) => {
+    if (req.isAuthenticated()){
+        let sql0 = `SELECT * FROM spells WHERE name = '${req.params['itemName']}'`;
+        db.query(sql0, (err, data) => {
+            let gemcost = data[0].gem_cost;
+            let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, cancel_image) 
+            VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '/resources/cancel.png')`;
+            db.query(sql, (err, data) => {
+                console.log('Item Added To Cart')
+            })
+        })
     }
+    res.redirect('/welcome');
 });
-app.get('/dropCart/:itemID', (req, res) => {
+app.get('/dropCart/:itemName', (req, res) => {
     if (req.isAuthenticated()) {
-        let sql = `DELETE FROM carts WHERE item_name = ${req.body.itemName} LIMIT 1`;
+        let sql = `DELETE FROM carts WHERE item_name = '${req.params['itemName']}' LIMIT 1`;
         db.query(sql, () => {
             console.log('Item Removed');
         })
+        res.redirect('/cart');
     } else {
         res.render('register');
     }
 });
-app.post('/checkout/:ID', (req, res) => {
+app.post('/checkout/:ID', (req, res, next) => {
     if (req.isAuthenticated()) {
-        let sql = `SELECT * FROM carts WHERE user_id = ${req.user.id}`;
+        let sql = `SELECT DISTINCT * FROM carts WHERE user_id = ${req.user.id}`;
         let sql2 = `DELETE FROM carts WHERE user_id = ${req.user.id}`;
-        let learned = [];
-//      let sql7 = `ALTER TABLE customers ADD COLUMN spells_learned_${id} TEXT WHERE id = ${userid};`;
         db.query(sql, (err, data) => {
             for (let i = 0; i < data.length; i++) {
-                learned.push(data[i].item_name);
+                db.query(`INSERT INTO learned (user_id, user_name, item_name, expr)
+                        VALUES (${req.user.id}, '${req.user.username}', '${data[i].item_name}', 5)`, (err, data) => {
+                })
             }
-            console.log(learned);
         })
         db.query(sql2, (err) => {
             console.log('Purchase completed')
         })
-    } else {
-        res.render('register');
     }
+    res.redirect('/welcome');
 })
 
 function initialize(passport, username, password) {

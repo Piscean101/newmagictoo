@@ -5,13 +5,30 @@
     <div class="default">
         <div id="sc-wrap">
             <div id="shopping-cart">
-
+                <a href="/dropCart/<%= locals.items[0] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[0] %>  <%= locals.itemgold[0] %> <%= locals.itemgems[0] %> </div></a>
+                <a href="/dropCart/<%= locals.items[1] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[1] %>  <%= locals.itemgold[1] %> <%= locals.itemgems[1] %> </div></a> 
+                <a href="/dropCart/<%= locals.items[2] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[2] %>  <%= locals.itemgold[2] %> <%= locals.itemgems[2] %> </div></a>
+                <a href="/dropCart/<%= locals.items[3] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[3] %>  <%= locals.itemgold[3] %> <%= locals.itemgems[3] %> </div></a> 
+                <a href="/dropCart/<%= locals.items[4] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[4] %>  <%= locals.itemgold[4] %> <%= locals.itemgems[4] %> </div></a> 
+                <a href="/dropCart/<%= locals.items[5] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[5] %>  <%= locals.itemgold[5] %> <%= locals.itemgems[5] %> </div></a>
+                <a href="/dropCart/<%= locals.items[6] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[6] %>  <%= locals.itemgold[6] %> <%= locals.itemgems[6] %> </div></a>
+                <a href="/dropCart/<%= locals.items[7] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[7] %>  <%= locals.itemgold[7] %> <%= locals.itemgems[7] %> </div></a>
+                <a href="/dropCart/<%= locals.items[8] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[8] %>  <%= locals.itemgold[8] %> <%= locals.itemgems[8] %> </div></a>
+                <a href="/dropCart/<%= locals.items[9] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[9] %>  <%= locals.itemgold[9] %> <%= locals.itemgems[9] %> </div></a>      
+            </div>
+            <div id="purchase-bar">
+                <h5><span id="total-period">Total:</span> <span id="purchase-total"><%= locals.goldTotal %> Gold <%= locals.gemTotal %> Gem(s)</span></h5>
+                <form name="checkoutForm" id="checkout-form" method="POST" action="/checkout/<%= locals.userid %>">
+                    <input type="hidden" name="goldTotal" value="<%= locals.goldTotal %>">
+                    <input type="hidden" name="gemTotal" value="<%= locals.gemTotal %>">
+                    <button id="checkout" name="checkout" type="submit">BUY</button>
+                </form>
             </div>
         </div>
         <div id="wallet-wrap">
-            <div id="wallet">
-                
-            </div>
+                <h2 id="wallet-name" class="wallet-info-wrap"><span class="wallet-info" id="wallet-info-name"><%= locals.name %></span></h2>
+                <h5 id="wallet-gold" class="wallet-info-wrap"><span class="wallet-info" id="wallet-info-gold"><%= locals.gold %></span> Gold</h5>
+                <h5 id="wallet-gems" class="wallet-info-wrap"><span class="wallet-info" id="wallet-info-gems"><%= locals.gems %></span> Gems</h5>
         </div>
         <div id="ab-wrap"><div id="access-bar">
             <button id="home" class="homebtn"><a href="/welcome">Home</a></button>

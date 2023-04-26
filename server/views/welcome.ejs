@@ -8,7 +8,9 @@
     <span style="font-size: 50%;">Bank:<span class="balance"> <%= locals.gold %></span> Gold <span class="balance"><%= locals.gems || 0 %></span> Gems</span>
 </h2>
 <div id="shop">
-<button id="spell-btn-1" class="spell-btn">
+    <form name="addspell" method="POST" action="/addspell/<%= locals.data %>">
+        <input type="hidden" name="gold" value="<%= locals.cost %>">
+<button id="spell-btn-1" class="spell-btn" type="submit" title="Add To Cart">
 <div id="spell-wrap">
     <div id="info-bg"></div><h3 id="spells"><%= locals.data %></h3>
     <div id="spell-element-wrap">
@@ -21,7 +23,10 @@
     
 </div>
 </button>
-<button id="spell-btn-2" class="spell-btn">
+    </form>
+    <form name="addspell" method="POST" action="/addspell/<%= locals.data2 %>">
+        <input type="hidden" name="gold" value="<%= locals.cost2 %>">
+<button id="spell-btn-2" class="spell-btn" type="submit">
     <div id="spell-wrap">
         <div id="info-bg"></div><h3 id="spells"><%= locals.data2 %></h3>
         <div id="spell-element-wrap">
@@ -34,7 +39,10 @@
         
     </div>
     </button>
-    <button id="spell-btn-3" class="spell-btn">
+    </form>
+    <form name="addspell" method="POST" action="/addspell/<%= locals.data3 %>">
+        <input type="hidden" name="gold" value=<%= locals.cost3 %>>
+    <button id="spell-btn-3" class="spell-btn" type="submit">
         <div id="spell-wrap">
             <div id="info-bg"></div><h3 id="spells"><%= locals.data3 %></h3>
             <div id="spell-element-wrap">
@@ -47,7 +55,10 @@
             
         </div>
         </button>
-<button id="spell-btn-admin" class="spell-btn">
+        </form>
+        <form name="addspell" method="POST" action="/addspell/<%= locals.admindata %>">
+            <input type="hidden" name="gold" value=<%= locals.salecost %>>
+<button id="spell-btn-admin" class="spell-btn" type="submit">
 <div id="spell-wrap">
     <div id="info-bg-admin" class="spell-btn"></div><h3 id="spells"><%= locals.admindata %></h3>
     <div id="spell-element-wrap">
@@ -57,9 +68,10 @@
     <div id="spell-info-wrap">
         <div id="info-bg-admin"></div><h5 id="spell-rank">Cost: <span style="color:red"><%= locals.salecost %></span> [<span style="color: white"><%= locals.gemadmin %></span>]</h5>
     </div>
-    <h5 id="featured">30% OFF</h5>
+    <p id="featured">30% OFF</p>
 </div>
 </button>
+    </form>
 </div>
 <!-- <form ><button type="submit"><img src="/resources/toggle.png" height="30px" width="30px" id="toggle" onclick=""></button></form> -->
 <div id="ab-wrap"><div id="access-bar">

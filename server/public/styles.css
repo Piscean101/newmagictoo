@@ -208,19 +208,20 @@
     border-radius: 5px;
 }
 #shop {
-    overflow-y: scroll;
+    overflow-y: hidden;
     display: flex;
     flex-wrap: wrap;
     position: absolute;
     height: 50%;
-    width: 80%;
+    min-width: 80%;
     justify-content: space-evenly;
     align-items: center;
     padding-left: 100px;
     padding-right: 100px;
     border-top: 2px solid white;
     border-bottom: 2px solid white;
-    color: white;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 #spell-wrap {
     display: flex;
@@ -272,18 +273,17 @@
     position: sticky;
     color:rgba(0, 0, 0, 0.25)
 }
+#spell-btn-admin {
+    top: 40px;
+}
 .spell-btn {
     background: none;
     border: none;
-    margin: 150px;
+    margin-bottom: 40px;
     position: relative;
 }
 .spell-btn:hover {
-    box-shadow: 0px 0px 10px 3px rgba(0, 0, 0, 0.501);
-    border: none;
-}
-#spell-btn-admin {
-    top: 40px;
+    animation: hover 500ms infinite alternate;
 }
 
 /* SHOPPING CART */
@@ -291,18 +291,110 @@
 #sc-wrap {
     position: absolute;
     width: 50%;
-    border: 2px solid purple;
     left: 20px;
     top: 20px;
     bottom: 20px;
+    display: grid;
+}
+.cart-item {
+    box-shadow: 0px 0px 5px 5px inset black;
+    margin-top: 10px;
+    line-height: 2.5;
+    font-size: 120%;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    font-weight: bolder;
+}
+.cart-item:hover {
+    box-shadow: 0px 0px 5px 5px inset red;
+}
+.cart-item * {
+    margin-top: 15px;
 }
 #wallet-wrap {
     position: absolute;
     top: 20px;
     right: 10%;
-    border: 2px solid pink;
     width: 30%;
-    height: 40%;
+    height: 15%;
+    display: grid;
+}
+#wallet-name {
+    background-color: black;
+    color: yellow;
+    height: 80px;
+}
+#wallet-gold, #wallet-gems {
+    background-color: rgba(118, 118, 118, 0.5);
+}
+#wallet-info-gems {
+    color: rgb(255, 0, 255);
+}
+#wallet-info-gold {
+    color: yellow;
+}
+.wallet-info-wrap {
+    position: relative;
+    width: 100%;
+    border-top: 1px solid black;
+    margin: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+.wallet-info-wrap * {
+    margin: 5px;
+}
+.cart-cancel {
+    height: 30px;
+    width: 30px;
+    position: relative;
+    right: 10px;
+}
+#shopping-cart {
+    overflow-y: auto;
+}
+#shopping-cart a:link {
+    color: black;
+}
+#shopping-cart a:visited {
+    color: black
+}
+#shopping-cart a:active {
+    color: red;
+}
+#total-period {
+    position: absolute;
+    left: 10px;
+    font-size: 250%;
+    color:rgba(0, 0, 0, 0.15);
+    bottom: 20%;
+}
+#purchase-total {
+    font-weight: bolder;
+    margin-left: 10px;
+}
+#purchase-bar {
+    position: absolute;
+    bottom: 0;
+    border-bottom: 5px solid black;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    word-spacing: 5px;
+}
+#checkout {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    background: none;
+    border: 5px solid black;
+    border-bottom: none;
 }
 
 /* MINIGAME AND UI */ 
@@ -508,14 +600,25 @@ button {
         font-size: 100%;
     }
 }
+@keyframes hover {
+    from {
+        margin-bottom: 40px;
+    }
+    to {
+        margin-bottom: 15px;
+    }
+}
 
 
 /* MEDIA QUERY */
 
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 920px) {
     #login {
         top: 100px;
+    }
+    #shop {
+        overflow-y: auto;
     }
 }
 
@@ -523,6 +626,7 @@ button {
     #shop {
         flex-wrap: wrap;
         flex-direction: row;
+        padding-bottom: 10px;
     }
     .spell-btn {
         margin-top: 50px;
@@ -531,8 +635,13 @@ button {
         bottom: 20%;
     }
     #wallet-wrap {
-        right: 5%;
-        height: 50%;
+        height: auto;
+    }
+    #wallet-gold, #wallet-gems {
+        height: 30px;
+    }
+    #wallet-gems {
+        margin-top: 0;
     }
 } 
 @media only screen and (max-width: 480px) { 
@@ -549,6 +658,7 @@ button {
         padding: 10px;
         right: 10px;
         left: 10px;
+        bottom: 0;
     }
 }
 @media only screen and (max-width: 400px) {

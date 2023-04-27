@@ -198,6 +198,15 @@
 .balance {
     color: grey;
 }
+.expr {
+    position: absolute;
+    top: 5px;
+    font-size: 115%;
+    color: rgb(0, 0, 0, 0.01);
+}
+.expr:hover {
+    color: rgba(128, 128, 128, 0.35);
+}
 #wm {
     position: absolute;
     left: 25px;
@@ -319,6 +328,7 @@
     width: 30%;
     height: 15%;
     display: grid;
+    font-size: 125%;
 }
 #wallet-name {
     background-color: black;
@@ -329,7 +339,7 @@
     background-color: rgba(118, 118, 118, 0.5);
 }
 #wallet-info-gems {
-    color: rgb(255, 0, 255);
+    color: rgb(176, 0, 176);
 }
 #wallet-info-gold {
     color: yellow;
@@ -362,8 +372,12 @@
 #shopping-cart a:visited {
     color: black
 }
-#shopping-cart a:active {
+#shopping-cart a:hover {
     color: red;
+    text-decoration: line-through;
+}
+#shopping-cart a:active {
+    text-decoration: none;
 }
 #total-period {
     position: absolute;
@@ -386,15 +400,30 @@
     align-items: center;
     word-spacing: 5px;
 }
+#purchase-error {
+    position: absolute;
+    z-index: 0;
+    font-size: 200%;
+    color:rgba(118, 118, 118, 0.25);
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+}
 #checkout {
     position: absolute;
     right: 0;
     top: 0;
+    bottom: -5px;
     width: 150px;
-    height: 100%;
+    min-height: 100%;
     background: none;
     border: 5px solid black;
     border-bottom: none;
+    border-radius: 5px;
+}
+#checkout:hover {
+    color: rgb(41, 164, 41);
+    font-size: 130%;
+    -webkit-text-stroke: 1px green;
 }
 
 /* MINIGAME AND UI */ 

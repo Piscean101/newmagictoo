@@ -19,10 +19,14 @@
             <div id="purchase-bar">
                 <h5><span id="total-period">Total:</span> <span id="purchase-total"><%= locals.goldTotal %> Gold <%= locals.gemTotal %> Gem(s)</span></h5>
                 <form name="checkoutForm" id="checkout-form" method="POST" action="/checkout/<%= locals.userid %>">
+                    <input type="hidden" name="expr" value="<%= locals.exprTotal %>">
+                    <input type="hidden" name="userGold" value="<%= locals.gold %>">
+                    <input type="hidden" name="userGems" value="<%= locals.gems %>">
                     <input type="hidden" name="goldTotal" value="<%= locals.goldTotal %>">
                     <input type="hidden" name="gemTotal" value="<%= locals.gemTotal %>">
                     <button id="checkout" name="checkout" type="submit">BUY</button>
                 </form>
+                <div id="purchase-error"><%= locals.p_error %></div>
             </div>
         </div>
         <div id="wallet-wrap">

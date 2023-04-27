@@ -84,17 +84,28 @@ app.get('/cart/:nickname', (req, res) => {
         let cartList = [];
         let cartGold = [];
         let cartGems = [];
+        let p_error = '';
         let goldTotal = 0;
         let gemTotal = 0;
+        let expr = [];
+        let exprTotal = 0;
         for (let i = 0; i < data.length ; i++) {
             cartList.push(data[i].item_name);
             cartGold.push(Math.abs(data[i].gold_cost));
             cartGems.push(`[${Math.abs(data[i].gem_cost)}]`);
             goldTotal += Math.abs(data[i].gold_cost);
-            gemTotal += (Math.abs(data[i].gem_cost))
+            gemTotal += (Math.abs(data[i].gem_cost));
+            expr.push(Math.abs(data[i].expr));
+            exprTotal += (Math.abs(data[i].expr));
+        }
+        if (Math.abs(req.user.gold) < goldTotal) {
+            p_error = 'Not Enough Gold';
+        }
+        if (Math.abs(req.user.gems) < gemTotal) {
+            p_error = 'Not Enough Gems'
         }
         res.render('cart', {
-            name: req.user.nickname , gold: req.user.gold , gems: req.user.gems, items: cartList ,
+            name: req.user.nickname , gold: req.user.gold , gems: req.user.gems, items: cartList , p_error: p_error , expr: expr , exprTotal: exprTotal ,
              itemgold: cartGold , itemgems: cartGems , goldTotal: goldTotal , gemTotal: gemTotal , userid: req.user.id
         });
     })
@@ -125,10 +136,10 @@ app.get('/welcome', (req, res) => {
     let random3 = Math.floor(Math.random() * spelldata3.length);
     res.render('welcome', 
         { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , 
-            data: spelldata[random].name, element: spelldata[random].element , rank: spelldata[random].spell_rank , cost: spelldata[random].cost , image: spelldata[random].image , gemcost: spelldata[random].gem_cost ,
-            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost ,
-            data2: spelldata2[random2].name, element2: spelldata2[random2].element , rank2: spelldata2[random2].spell_rank , cost2: spelldata2[random2].cost , image2: spelldata2[random2].image , gemcost2: spelldata2[random2].gem_cost ,
-            data3: spelldata3[random3].name, element3: spelldata3[random3].element , rank3: spelldata3[random3].spell_rank , cost3: spelldata3[random3].cost , image3: spelldata3[random3].image , gemcost3: spelldata3[random3].gem_cost ,
+            data: spelldata[random].name, element: spelldata[random].element , exp: spelldata[random].expr , cost: spelldata[random].cost , image: spelldata[random].image , gemcost: spelldata[random].gem_cost ,
+            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , adminexp: adminoption.expr , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost ,
+            data2: spelldata2[random2].name, element2: spelldata2[random2].element , exp2: spelldata2[random2].expr , cost2: spelldata2[random2].cost , image2: spelldata2[random2].image , gemcost2: spelldata2[random2].gem_cost ,
+            data3: spelldata3[random3].name, element3: spelldata3[random3].element , exp3: spelldata3[random3].expr , cost3: spelldata3[random3].cost , image3: spelldata3[random3].image , gemcost3: spelldata3[random3].gem_cost ,
         });
             })
             })
@@ -231,8 +242,8 @@ app.post('/addspell/:itemName', (req, res) => {
         let sql0 = `SELECT * FROM spells WHERE name = '${req.params['itemName']}'`;
         db.query(sql0, (err, data) => {
             let gemcost = data[0].gem_cost;
-            let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, cancel_image) 
-            VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '/resources/cancel.png')`;
+            let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, expr) 
+            VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '${data[0].expr}')`;
             db.query(sql, (err, data) => {
                 console.log('Item Added To Cart')
             })
@@ -252,21 +263,42 @@ app.get('/dropCart/:itemName', (req, res) => {
     }
 });
 app.post('/checkout/:ID', (req, res, next) => {
+    if (Math.abs(req.body.userGold) >= Math.abs(req.body.goldTotal) && Math.abs(req.body.userGems) >= Math.abs(req.body.gemTotal)) {
     if (req.isAuthenticated()) {
         let sql = `SELECT DISTINCT * FROM carts WHERE user_id = ${req.user.id}`;
         let sql2 = `DELETE FROM carts WHERE user_id = ${req.user.id}`;
+        let newgold = (Math.abs(req.body.userGold) - Math.abs(req.body.goldTotal));
+        let newgems = (Math.abs(req.body.userGems) - Math.abs(req.body.gemTotal));
+        let sql3 = `UPDATE customers SET gold = ${newgold} WHERE id = ${req.user.id}`;
+        let sql4 = `UPDATE customers SET gems = ${newgems} WHERE id = ${req.user.id}`;
+        let sql5 = `SELECT * FROM customers WHERE id = ${req.user.id}`;
         db.query(sql, (err, data) => {
             for (let i = 0; i < data.length; i++) {
                 db.query(`INSERT INTO learned (user_id, user_name, item_name, expr)
-                        VALUES (${req.user.id}, '${req.user.username}', '${data[i].item_name}', 5)`, (err, data) => {
+                        VALUES (${req.user.id}, '${req.user.username}', '${data[i].item_name}', ${data[i].expr})`, (err, data) => {
                 })
             }
         })
+        db.query(sql5, (err, data) => {
+            let submitexpr = Math.abs(req.body.expr) + Math.abs(data[0].expr);
+            let sql6 = `UPDATE customers SET expr = ${submitexpr} WHERE id = ${req.user.id}`;  
+            db.query(sql6, (err, data) => {
+                console.log('XP Gained')
+            })
+        })
         db.query(sql2, (err) => {
-            console.log('Purchase completed')
+            console.log('Cart Emptied');
+        })
+        db.query(sql3, (err) => {
+            db.query(sql4, (err) => {
+                console.log('Purchase Complete!');
+            })
         })
     }
-    res.redirect('/welcome');
+    res.redirect('/login'); 
+} else {
+    res.redirect('/cart');
+}
 })
 
 function initialize(passport, username, password) {

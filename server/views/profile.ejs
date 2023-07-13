@@ -3,10 +3,11 @@
     <script src="/shop.js"></script>
 </head>
 <div id="page-wrapper">
-<div id="welcomepage" class="default">
+<div class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Welcome <%= locals.username %>,</span><br>&nbsp;
     <span style="font-size: 50%;">Bank:<span class="balance"> <%= locals.gold %></span> Gold <span class="balance"><%= locals.gems || 0 %></span> Gems</span>
 </h2>
+
 
 <div id="shop">
     <div id="card-wrap">
@@ -23,12 +24,13 @@
     <% } %>
     </div>
 </div>
+
+
 <div id="ab-wrap"><div id="access-bar">
     <button id="minigame"><a href="/minigame" class="homebtn">Play</a></button>
-    <button id="profile"><a href="/profile" class="homebtn">Profile</a></button>
+    <button id="profile"><a href="/welcome" class="homebtn">Back</a></button>
     <button id="cart"><a href="/cart" class="homebtn">Cart</a></button>
     <button id="logout"><a href="/logout" class="homebtn">Logout</a></button>
 </div></div>
-
 </div>
 </div>

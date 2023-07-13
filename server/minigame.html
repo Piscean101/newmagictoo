@@ -7,7 +7,7 @@
 <div id="page-wrapper">
 <div id="minigamepage" class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Play And Earn Gold</span><br>
-    <span class="balance" style="font-size: 50%;">Solve 10 Problems In A Row To Earn A Gem</span> 
+    <span class="balance" style="font-size: 50%;">Solve <b style="color: white">10</b> Problems In A Row To Earn A Gem</span> 
 </h2>
 <div id="pg-wrap">
     
@@ -25,11 +25,12 @@
 </div>
 <div id="ab-wrap"><div id="access-bar">
     <button id="home"><a href="/welcome">Home</a></button>
+    <img src="/resources/diamond-outline.svg" height="50px" width="50px" id="gem-image">
     <form id="claimgold" name="claimgold" method="POST" action="/claimgold">
         <input type="hidden" name="gemcount" id="gem-count" value="0">
         <input type="hidden" name="counter" id="counter" value="0">
         <input type="hidden" name="hidden" id="hidden-gold" value="0">
-        <button id="claim" type="submit">CLAIM<span id="claim-gold"></span>GOLD&nbsp; + &nbsp;LOGOUT</button>
+        <button id="claim" type="submit">CLAIM<span id="claim-gold"></span>GOLD</button>
     </form>
     <button id="logout"><a href="/logout">Logout</a></button>
 </div></div>

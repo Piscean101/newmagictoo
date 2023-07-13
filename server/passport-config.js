@@ -29,7 +29,7 @@ function initialize(passport, username, password) {
     passport.use(new LocalStrategy(authenticate));
     
     passport.serializeUser( function(user, done) { return done (null, user)});
-    passport.deserializeUser( function(user, done) { return done(null, user)})
+    passport.deserializeUser( function(user, done) { return done(null, user)});
 }
 
 module.exports = initialize;

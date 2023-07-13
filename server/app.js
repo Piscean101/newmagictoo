@@ -16,7 +16,6 @@ const db = mysql.createConnection({
 });
 const path = require('path');
 const cookie = require('cookie-parser');
-const { error } = require('console');
 const LocalStrategy = require('passport-local').Strategy;
 
 // Initialization
@@ -40,20 +39,25 @@ app.use(session({
     rolling: true,
     cookie: {
         secure: false,
-        maxAge: 300000,
-        minAge: 200000
+        maxAge: 1800000,
+        minAge: 300000
     }
 }));
 app.use(cookie());
 app.use(passport.initialize());
 app.use(passport.session());
-app.listen(3000, () => {
-    console.log('Successfully twerking on PORT');
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log('Successfully twerking on PORT', PORT);
 });
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Navigation Routes 
+
+app.get('/register', (req, res) => {
+    res.render('register')
+});
 app.get('*', (req, res, next) => {
     if (!req.isAuthenticated()) {
         return res.render('login')
@@ -66,12 +70,20 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login');
 })
-app.get('/register', (req, res) => {
-    res.render('register')
-});
 app.get('/index', (req, res) => {
     res.render('index');
 });
+app.get('/profile', (req, res) => {
+    let user = `SELECT * FROM customers WHERE id = ${req.user.id}`;
+    let learned = `SELECT * FROM learned WHERE user_id = ${req.user.id}`;
+    db.query(user, (err, userData) => {
+        db.query(learned, (err, learnedSpells) => {
+            res.render('profile', 
+        { id: req.user.id , username: req.user.nickname , gold: userData[0].gold , gems: userData[0].gems , data: learnedSpells
+        });
+        })
+    });
+})
 app.get('/cart', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.render('login');
@@ -121,29 +133,17 @@ app.get('/welcome', (req, res) => {
     if (!req.user.gems) {
         res.locals.gems = 0;
     }
-    let sql = `SELECT * FROM spells WHERE admin_choice is NULL AND cost >= 75`;
+    /* store */
+    let sql = `SELECT * FROM spells WHERE admin_choice is NULL ORDER BY 2`;
     db.query(sql, (err, spelldata) => {
     let random = Math.floor((Math.random() * spelldata.length));
-        let sql2 = `SELECT * FROM spells WHERE admin_choice = 'true'`;
-        db.query(sql2, (err, data) => {
-    let adminoption = data[0];
-    let salecost = Math.ceil((adminoption.cost/10)*7);
-            let sql3 = `SELECT * FROM spells WHERE admin_choice is NULL AND id != ${spelldata[random].id}`;
-            db.query(sql3, (err, spelldata2) => {
-    let random2 = Math.floor(Math.random() * spelldata2.length);
-            let sql4 = `SELECT * FROM spells WHERE admin_choice is NULL AND id != ${spelldata[random].id} AND id != ${spelldata2[random2].id}`;
-            db.query(sql4, (err, spelldata3) => {
-    let random3 = Math.floor(Math.random() * spelldata3.length);
-    res.render('welcome', 
-        { username: req.user.nickname , gold: req.user.gold , gems: req.user.gems , 
-            data: spelldata[random].name, element: spelldata[random].element , exp: spelldata[random].expr , cost: spelldata[random].cost , image: spelldata[random].image , gemcost: spelldata[random].gem_cost ,
-            salecost: salecost , admindata: adminoption.name , adminelement: adminoption.element , adminexp: adminoption.expr , admincost: adminoption.cost, adminimage: adminoption.image, gemadmin: adminoption.gem_cost ,
-            data2: spelldata2[random2].name, element2: spelldata2[random2].element , exp2: spelldata2[random2].expr , cost2: spelldata2[random2].cost , image2: spelldata2[random2].image , gemcost2: spelldata2[random2].gem_cost ,
-            data3: spelldata3[random3].name, element3: spelldata3[random3].element , exp3: spelldata3[random3].expr , cost3: spelldata3[random3].cost , image3: spelldata3[random3].image , gemcost3: spelldata3[random3].gem_cost ,
+    let user = `SELECT * FROM customers WHERE id = ${req.user.id}`;
+    db.query(user, (err, userData) => {
+        res.render('welcome', 
+        { username: req.user.nickname , gold: userData[0].gold , gems: userData[0].gems , 
+            data: spelldata,
         });
-            })
-            })
-    });
+    })
         })
 });
 app.get('/minigame', (req, res) => {
@@ -155,57 +155,8 @@ app.get('/minigame', (req, res) => {
 
 // Query Routes
 
-// User Routes 
-app.post('/register', (req, res) => {
-    let string = req.body.username.toString();
-    let lowercase = string.toLowerCase();
-    let nospace = lowercase.replace(" ","");
-    let doesExist = `SELECT * FROM customers WHERE username = '${nospace}';`;
-    db.query(doesExist, (err, exists) => {
-        console.log(exists.length);
-        if (exists.length === 1) {
-        res.render('register', { message: 'This username is not available, please try again', nickname: req.body.nickname });
-        } else if (exists.length === 0) { 
-        res.render('register', { message: 'Hello fair maiden. Registration successful!'})
-        let register = `INSERT INTO customers (username, password, nickname) VALUES ('${req.body.username}','${req.body.password}','${req.body.nickname}')`;
-    db.query(register, () => {
-        console.log('New User Registered', req.body.username);
-    })
-    }
-    })
-});
-app.post('/login/password', (req, res, next) => {
-    let sql = `SELECT * FROM customers WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
-    db.query(sql, (err, data) => {
-        if (data.length === 1) {
-            next();
-        } else { 
-            res.render('login', { message: 'Your username or password may be incorrect'});
-        }
-    })
-});
-app.post('/login/password', (req, res, next) => {
-    initialize(
-        passport,
-        req.body.username,
-        req.body.password
-    )
-    next();
-});
-app.post('/login/password', passport.authenticate('local', {
-    successRedirect: `/welcome`,
-    failureRedirect: '/login'
-})
-);
-app.get('/logout', (req, res) => {
-    res.render('login');
-    req.session.destroy();
-    req.logOut( () => {
-        console.log('bye felicia')
-    });
-});
-
 // Purchase Routes
+
 app.post('/claimgold', (req, res, next) => {
     if (req.isAuthenticated()) {
         let gem_count = Math.abs(req.body.gemcount);
@@ -232,7 +183,7 @@ app.post('/claimgold', (req, res) => {
             console.log(err)
         }
     })
-    res.render('login');
+    res.redirect('/welcome');
 } else {
     res.render('register');
 } 
@@ -245,7 +196,11 @@ app.post('/addspell/:itemName', (req, res) => {
             let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, expr) 
             VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '${data[0].expr}')`;
             db.query(sql, (err, data) => {
-                console.log('Item Added To Cart')
+                if (!err) {
+                console.log('Item Added To Cart');
+                } else {
+                    console.log(err);
+                }
             })
         })
     }
@@ -262,7 +217,7 @@ app.get('/dropCart/:itemName', (req, res) => {
         res.render('register');
     }
 });
-app.post('/checkout/:ID', (req, res, next) => {
+app.post('/checkout/:ID', (req, res) => {
     if (Math.abs(req.body.userGold) >= Math.abs(req.body.goldTotal) && Math.abs(req.body.userGems) >= Math.abs(req.body.gemTotal)) {
     if (req.isAuthenticated()) {
         let sql = `SELECT DISTINCT * FROM carts WHERE user_id = ${req.user.id}`;
@@ -283,7 +238,7 @@ app.post('/checkout/:ID', (req, res, next) => {
             let submitexpr = Math.abs(req.body.expr) + Math.abs(data[0].expr);
             let sql6 = `UPDATE customers SET expr = ${submitexpr} WHERE id = ${req.user.id}`;  
             db.query(sql6, (err, data) => {
-                console.log('XP Gained')
+                console.log('XP Gained');
             })
         })
         db.query(sql2, (err) => {
@@ -295,11 +250,62 @@ app.post('/checkout/:ID', (req, res, next) => {
             })
         })
     }
-    res.redirect('/login'); 
+    res.redirect('/welcome'); 
 } else {
     res.redirect('/cart');
 }
 })
+
+
+// User Routes 
+app.post('/register', (req, res) => {
+    let string = req.body.username.toString();
+    let lowercase = string.toLowerCase();
+    let nospace = lowercase.replace(" ","");
+    let doesExist = `SELECT * FROM customers WHERE username = '${nospace}';`;
+    db.query(doesExist, (err, exists) => {
+        console.log(exists.length);
+        if (exists.length === 1) {
+        res.render('register', { message: 'This username is not available, please try again', nickname: req.body.nickname });
+        } else if (exists.length === 0) { 
+        res.render('register', { message: 'Hello fair maiden. Registration successful!'})
+        let register = `INSERT INTO customers (username, password, nickname) VALUES ('${req.body.username}','${req.body.password}','${req.body.nickname}')`;
+    db.query(register, () => {
+        console.log('New User Registered', req.body.username);
+    })
+    }
+    })
+});
+app.post('/login/password', (req, res, next) => {
+    let sql = `SELECT * FROM customers WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
+    db.query(sql, (err, data) => {
+        if (data.length === 1) {
+            next();
+        } else { 
+            res.render('login', { message: 'Your username or password may be incorrect' });
+        }
+    })
+});
+app.post('/login/password', (req, res, next) => {
+    initialize(
+        passport,
+        req.body.username,
+        req.body.password
+    )
+    next();
+});
+app.post('/login/password', passport.authenticate('local', {
+    successRedirect: `/welcome`,
+    failureRedirect: '/login'
+})
+);
+app.get('/logout', (req, res) => {
+    res.render('login');
+    req.session.destroy();
+    req.logOut( () => {
+        console.log('bye felicia')
+    });
+});
 
 function initialize(passport, username, password) {
     const authenticate = async (username, password, done) => {
@@ -320,9 +326,9 @@ function initialize(passport, username, password) {
     
     passport.use(new LocalStrategy(authenticate));
     
-    passport.serializeUser( function(user, done) { return done (null, user)});
+    passport.serializeUser( function(user, done) { return done(null, user)});
     passport.deserializeUser( function(user, done) { return done(null, user)});
 }
 app.get('*', (req, res) => {
-    res.status(404).send('The page you requested does not exist on this server.');
+    res.status(404).send('Sorry, we could not find the page you were looking for.');
   });

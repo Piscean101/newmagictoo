@@ -45,6 +45,7 @@ submit.addEventListener('click', (e) => {
         claimgold.innerHTML = cashout;
         hiddengold.value ++;
         counter.value ++;
+        console.log(counter.value);
         if (time > 1) { 
             time = 1
         }
@@ -54,6 +55,7 @@ submit.addEventListener('click', (e) => {
     if (counter.value >= 10) {
         gemcount.value ++;
         counter.value = 0;
+        setTimeout(document.getElementById('gem-image').classList.add('image-fade'), 3000);
     }
 }, false)
 claim.addEventListener('click', (e) => {

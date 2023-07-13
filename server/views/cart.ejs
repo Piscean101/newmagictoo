@@ -17,7 +17,7 @@
                 <a href="/dropCart/<%= locals.items[9] %>" title="Remove From Cart"><div id="sc-item-1" class="cart-item"><%= locals.items[9] %>  <%= locals.itemgold[9] %> <%= locals.itemgems[9] %> </div></a>      
             </div>
             <div id="purchase-bar">
-                <h5><span id="total-period">Total:</span> <span id="purchase-total"><%= locals.goldTotal %> Gold <%= locals.gemTotal %> Gem(s)</span></h5>
+                <h5 id="purchase-section"><span id="total-period">Total:</span> <span id="purchase-total"><%= locals.goldTotal %> Gold <%= locals.gemTotal %> Gem(s)</span></h5>
                 <form name="checkoutForm" id="checkout-form" method="POST" action="/checkout/<%= locals.userid %>">
                     <input type="hidden" name="expr" value="<%= locals.exprTotal %>">
                     <input type="hidden" name="userGold" value="<%= locals.gold %>">

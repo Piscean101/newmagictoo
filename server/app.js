@@ -9,8 +9,8 @@ const cors = require('cors');
 const mysql = require('mysql');
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'dre',
-    password: 'dragon4765',
+    user: 'root',
+    password: 'secret',
     database: 'magicboat',
     PORT: 3306
 });
@@ -80,10 +80,10 @@ app.get('/profile', (req, res) => {
         db.query(learned, (err, learnedSpells) => {
             res.render('profile', 
         { id: req.user.id , username: req.user.nickname , gold: userData[0].gold , gems: userData[0].gems , data: learnedSpells
+            });
         });
-        })
     });
-})
+});
 app.get('/cart', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.render('login');
@@ -193,8 +193,8 @@ app.post('/addspell/:itemName', (req, res) => {
         let sql0 = `SELECT * FROM spells WHERE name = '${req.params['itemName']}'`;
         db.query(sql0, (err, data) => {
             let gemcost = data[0].gem_cost;
-            let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, expr) 
-            VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '${data[0].expr}')`;
+            let sql = `INSERT INTO carts (user_id, user_name, item_name, gold_cost, gem_cost, expr, effect, color, element) 
+            VALUES (${req.user.id}, '${req.user.username}', '${req.params['itemName']}', ${req.body.gold}, ${gemcost}, '${data[0].expr}', '${data[0].effect}', '${data[0].color}', '${data[0].element}')`;
             db.query(sql, (err, data) => {
                 if (!err) {
                 console.log('Item Added To Cart');
@@ -229,8 +229,8 @@ app.post('/checkout/:ID', (req, res) => {
         let sql5 = `SELECT * FROM customers WHERE id = ${req.user.id}`;
         db.query(sql, (err, data) => {
             for (let i = 0; i < data.length; i++) {
-                db.query(`INSERT INTO learned (user_id, user_name, item_name, expr)
-                        VALUES (${req.user.id}, '${req.user.username}', '${data[i].item_name}', ${data[i].expr})`, (err, data) => {
+                db.query(`INSERT INTO learned (user_id, user_name, item_name, expr, element, effect, color)
+                        VALUES (${req.user.id}, '${req.user.username}', '${data[i].item_name}', ${data[i].expr}, '${data[i].element}', '${data[i].effect}', '${data[i].color}')`, (err, data) => {
                 })
             }
         })
@@ -257,7 +257,7 @@ app.post('/checkout/:ID', (req, res) => {
 })
 
 
-// User Routes 
+// Registration Routes 
 app.post('/register', (req, res) => {
     let string = req.body.username.toString();
     let lowercase = string.toLowerCase();

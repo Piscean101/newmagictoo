@@ -1,7 +1,7 @@
 <head>
     <link rel="stylesheet" href="/styles.css"/>
-    <script src="/shop.js"></script>
 </head>
+<body>
 <div id="page-wrapper">
 <div class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Welcome <%= locals.username %>,</span><br>&nbsp;
@@ -12,13 +12,13 @@
 <div id="shop">
     <div id="card-wrap">
    <% for (let i = 0; i < locals.data.length; i++) { %>
-    <form name="addspell" method="POST" action="/addspell/<%= locals.data[i].name %>" onclick="alert('Spell Added to Cart!')">
+    <form name="addspell" onclick="alert('Spell Added to Cart!')">
         <input type="hidden" name="gold" value="<%= locals.data[i].cost %>">
-<button id="spell-btn-1" class="spell-btn" type="submit" title="Add To Cart">
+<button id="spell-btn-1" class="spell-btn" title="You learned, <%= locals.data[i].name %>">
         <div class="card card-<%= locals.data[i].color%>" id="card-<%= locals.data[i].name %>">
-            <section class="card-title"><%= locals.data[i].name %></section>
-            <section class="card-icons" title="<%= locals.data[i].cost %> gold / <%= locals.data[i].gem_cost || 0 %> gem(s)"> <%= locals.data[i].cost %>&nbsp;<img src="/resources/logo-bitcoin.svg" class="card-logo"> <%= locals.data[i].gem_cost %> &nbsp;<img src="/resources/diamond-outline.svg" class="card-logo"></section>
-            <section class="card-desc">+<%= locals.data[i].expr %>XP</section>
+            <section class="card-title"><%= locals.data[i].item_name %></section>
+            <section class="card-icons" title="<%= locals.data[i].cost %> gold / <%= locals.data[i].gem_cost || 0 %> gem(s)"><%= locals.data[i].expr %>XP </section>
+            <section class="card-desc">Spell Description</section>
         </div>
         </button></form>
     <% } %>
@@ -28,9 +28,10 @@
 
 <div id="ab-wrap"><div id="access-bar">
     <button id="minigame"><a href="/minigame" class="homebtn">Play</a></button>
-    <button id="profile"><a href="/welcome" class="homebtn">Back</a></button>
+    <button id="profile"><a href="/welcome" class="homebtn">Home</a></button>
     <button id="cart"><a href="/cart" class="homebtn">Cart</a></button>
     <button id="logout"><a href="/logout" class="homebtn">Logout</a></button>
 </div></div>
 </div>
 </div>
+</body>

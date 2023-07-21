@@ -225,7 +225,50 @@
     background-color: rgba(0, 0, 0, 0.25);
     border-radius: 5px;
 }
+#select-filter {
+    position: absolute;
+    height: 175px;
+    width: 400px;
+    z-index: 10;
+    color: yellow;
+    right: 4%;
+    top: 1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.submit-element {
+    width: 150px;
+    height: 50px;
+    margin: 5px;
+    border-radius: 15px;
+    transition: all 500ms ease;
+}
+#submit-fire:hover {
+    background-color: red;
+    color: orange;
+} #submit-ice:hover {
+    background-color: lightblue;
+    color: blue;
+} #submit-spirit:hover {
+    background-color: burlywood;
+    color: brown;
+} #submit-shadow:hover {
+    background-color: darkviolet;
+    color: gold;
+} #submit-all:hover {
+    background-color: black;
+    color: white;
+}
 
+#submit-all {
+    width: 60px;
+    height: 80%;
+    position: absolute;
+    left: -50px;
+    top: 0;
+}
 
 /* SHOP AND CARDS */
 
@@ -242,6 +285,9 @@
     border-bottom: 2px solid white;
     padding-top: 30px;
     padding-bottom: 30px;
+}
+#shop.no-border {
+    border: none;
 }
 #shop::-webkit-scrollbar {
     color: rgb(70, 86, 150);

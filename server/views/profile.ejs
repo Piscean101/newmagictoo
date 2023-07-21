@@ -9,7 +9,7 @@
 </h2>
 
 
-<div id="shop">
+<div id="shop" class="no-border">
     <div id="card-wrap">
    <% for (let i = 0; i < locals.data.length; i++) { %>
     <form name="addspell" onclick="alert('Spell Added to Cart!')">
@@ -17,7 +17,7 @@
 <button id="spell-btn-1" class="spell-btn" title="You learned, <%= locals.data[i].name %>">
         <div class="card card-<%= locals.data[i].color%>" id="card-<%= locals.data[i].name %>">
             <section class="card-title"><%= locals.data[i].item_name %></section>
-            <section class="card-icons" title="<%= locals.data[i].cost %> gold / <%= locals.data[i].gem_cost || 0 %> gem(s)"><%= locals.data[i].expr %>XP </section>
+            <section class="card-icons" title="<%= locals.data[i].cost %> gold / <%= locals.data[i].gem_cost || 0 %> gem(s)"><b style="color:'lightgrey'; opacity:0.2"><%= locals.data[i].expr %>XP</b> </section>
             <section class="card-desc">Spell Description</section>
         </div>
         </button></form>

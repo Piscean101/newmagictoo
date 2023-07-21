@@ -146,6 +146,44 @@ app.get('/welcome', (req, res) => {
     })
         })
 });
+app.post('/filter/:element', (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.render('login');
+    }
+    if (!req.user.gold) {
+        res.locals.gold = 0;
+    }
+    if (!req.user.gems) {
+        res.locals.gems = 0;
+    }
+    /* store */
+    if (req.params.element === 'all') {
+        let sql = `SELECT * FROM spells WHERE admin_choice is NULL ORDER BY 2`;
+        db.query(sql, (err, spelldata) => {
+            let random = Math.floor((Math.random() * spelldata.length));
+            let user = `SELECT * FROM customers WHERE id = ${req.user.id}`;
+            db.query(user, (err, userData) => {
+                res.render('welcome', 
+                { username: req.user.nickname , gold: userData[0].gold , gems: userData[0].gems , 
+                    data: spelldata,
+                });
+            })
+                })
+    } else {
+
+    let sql = `SELECT * FROM spells WHERE admin_choice is NULL AND element = '${req.params.element}' ORDER BY 2`;
+    db.query(sql, (err, spelldata) => {
+    let random = Math.floor((Math.random() * spelldata.length));
+    let user = `SELECT * FROM customers WHERE id = ${req.user.id}`;
+    db.query(user, (err, userData) => {
+        res.render('welcome', 
+        { username: req.user.nickname , gold: userData[0].gold , gems: userData[0].gems , 
+            data: spelldata,
+        });
+    })
+        })
+    }
+})
 app.get('/minigame', (req, res) => {
     if (!req.isAuthenticated()) {
         res.render('login');

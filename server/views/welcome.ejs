@@ -1,11 +1,35 @@
 <head>
     <link rel="stylesheet" href="/styles.css"/>
 </head>
+<body>
 <div id="page-wrapper">
 <div id="welcomepage" class="default">
 <h2 id="wm"> <span style=" font-size: 125%;">Welcome <%= locals.username %>,</span><br>&nbsp;
     <span style="font-size: 50%;">Bank:<span class="balance"> <%= locals.gold %></span> Gold <span class="balance"><%= locals.gems || 0 %></span> Gems</span>
 </h2>
+
+<aside id="select-filter">
+        <form method="POST" name="filter" action="/filter/all">
+            <input type="hidden" name="element-filter" value="All">
+            <button type="submit" id="submit-all" class="submit-element">ALL</button>
+        </form>
+        <form method="POST" name="filter" action="/filter/Fire">
+            <input type="hidden" name="element-filter" value="Fire">
+            <button type="submit" id="submit-fire" class="submit-element">Fire</button>
+        </form>
+        <form method="POST" name="filter" action="/filter/Ice">
+            <input type="hidden" name="element-filter" value="Ice">
+            <button type="submit" id="submit-ice" class="submit-element">Ice</button>
+        </form>
+        <form method="POST" name="filter" action="/filter/Spirit">
+            <input type="hidden" name="element-filter" value="Spirit">
+            <button type="submit" id="submit-spirit" class="submit-element">Spirit</button>
+        </form>
+        <form method="POST" name="filter" action="/filter/Shadow">
+            <input type="hidden" name="element-filter" value="Shadow">
+            <button type="submit" id="submit-shadow" class="submit-element">Shadow</button>
+        </form>
+</aside>
 
 <div id="shop">
     <div id="card-wrap">
@@ -31,3 +55,4 @@
 
 </div>
 </div>
+</body>

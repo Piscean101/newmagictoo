@@ -19,7 +19,7 @@ const cookie = require('cookie-parser');
 const LocalStrategy = require('passport-local').Strategy;
 
 // Initialization
-
+ 
 db.connect((err) => {
     if(!err) {
         console.log('Bobs')
